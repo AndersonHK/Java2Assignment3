@@ -11,9 +11,8 @@ public class App {
     String dataDir = "testdata";
 
     public void createFolder() {
-        Path folderPath = Path.of(dataDir);
         try {
-            Files.createDirectories(folderPath);
+            Files.createDirectories(Path.of(dataDir));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,7 +38,17 @@ public class App {
         }
     }
 
-    public String getGreeting() {
+    public void deleteFolder() {
+        try {
+            Files.walk(Path.of(dataDir))
+                .map(Path::toFile)
+                .forEach(f -> f.delete());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String selfTest() {
         createFolder();
         Path f1 = createFile("f1.txt", 3);
         Path f2 = createFile("f2.txt", 27);
@@ -47,10 +56,11 @@ public class App {
         displayFile(f1);
         displayFile(f2);
         displayFile(f3);
+        deleteFolder();
         return "Hello World!";
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        System.out.println(new App().selfTest());
     }
 }

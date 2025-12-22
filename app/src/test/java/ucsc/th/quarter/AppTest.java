@@ -5,10 +5,69 @@ package ucsc.th.quarter;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import java.nio.file.Path;
 
 public class AppTest {
-    @Test public void appHasAGreeting() {
+    @Test public void testdataFolderCreated() {
         App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+        try {
+            classUnderTest.createFolder();
+            classUnderTest.createFolder(); // create again to test existing folder case
+            
+        } catch (Exception e) {
+            assert false : "Exception thrown during folder creation: " + e.getMessage();
+        }
+        assert true;
+    }
+    @Test public void testdataAlreadyExists() {
+        App classUnderTest = new App();
+        try {
+            classUnderTest.createFolder(); // create again to test existing folder case 
+        } catch (Exception e) {
+            assert false : "Exception thrown during existing folder check: " + e.getMessage();
+        }
+        assert true;
+    }
+    @Test public void testDisplayFile() {
+        App classUnderTest = new App();
+        classUnderTest.displayFile(classUnderTest.createFile("f1.txt", 3));
+        classUnderTest.displayFile(classUnderTest.createFile("f2.txt", 27));
+        classUnderTest.displayFile(classUnderTest.createFile("f3.txt", 7));
+        assert true;
+    }
+    @Test public void testDisplayFileNotFound() {
+        App classUnderTest = new App();
+        Path f1 = classUnderTest.createFile("f1.txt", 3);
+        Path f2 = classUnderTest.createFile("f2.txt", 27);
+        Path f3 = classUnderTest.createFile("f3.txt", 7);
+        classUnderTest.deleteFolder(); // delete files to test not found case
+        try {
+            classUnderTest.displayFile(f1);
+            classUnderTest.displayFile(f2);
+            classUnderTest.displayFile(f3);
+        } catch (Exception e) {
+            assert false : "Exception thrown during existing folder check: " + e.getMessage();
+        }
+        assert true;
+    }
+    @Test public void testDisplayFileAlreadyExists() {
+        App classUnderTest = new App();
+        classUnderTest.createFile("f1.txt", 3);
+        classUnderTest.createFile("f2.txt", 27);
+        classUnderTest.createFile("f3.txt", 7);
+        classUnderTest.displayFile(classUnderTest.createFile("f1.txt", 3));
+        classUnderTest.displayFile(classUnderTest.createFile("f2.txt", 27));
+        classUnderTest.displayFile(classUnderTest.createFile("f3.txt", 7));
+        assert true;
     }
 }
+/*
+folder testdata created
+folder testdata already exists
+read and display f1.txt
+file f1.txt does not exist
+read and display f2.txt
+file f2 does not exist
+read and display file f3.txt
+file f3.txt does not exist
+ */
